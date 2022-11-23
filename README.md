@@ -1,6 +1,6 @@
 # msc-circle-progress
 
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/msc-circle-progress) [![DeepScan grade](https://deepscan.io/api/teams/16372/projects/22133/branches/651098/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=16372&pid=22133&bid=651098)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/msc-circle-progress) [![DeepScan grade](https://deepscan.io/api/teams/16372/projects/23113/branches/690772/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=16372&pid=23113&bid=690772)
 
 &lt;msc-circle-progress /> provides progress with circle shape. Developers could use it to indicate upload、form complete status for users.
 
