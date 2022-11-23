@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Web Component: &lt;msc-circle-progress /> - web components based progress effect</title>
+<meta name="description" content="<msc-circle-progress /> provides progress with circle shape. Developers could use it to indicate upload、form complete status for users." />
+<script type="module" src="mjs/wc-msc-circle-progress.js"></script>
+<style>
+/* reset */
+body,div,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,legend,input,textarea,p,article,aside,figcaption,figure,nav,section,mark,audio,video,main{margin:0;padding:0}
+article,aside,figcaption,figure,nav,section,main{display:block}
+fieldset,img{border:0}
+address,caption,cite,em,strong{font-style:normal;font-weight:400}
+ol,ul{list-style:none}
+caption{text-align:left}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400}
+abbr{border:0;font-variant:normal}
+input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}
+body{-webkit-text-size-adjust:none}
+select,input,button,textarea{font:100% arial,helvetica,clean,sans-serif;}
+del{font-style:normal;text-decoration:none}
+pre{font-family:monospace;line-height:100%}
+progress{-webkit-appearance:none;appearance:none;overflow:hidden;border:0 none;}
+
+/* page */
+html,body{font-family:system-ui,sans-serif;text-size-adjust:100%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:16px;}
+#hd,#ft{display:none;}
+
+body{position:relative;inline-size:100vw;block-size:100vh;margin:0 ;}
+.wrap{position:absolute;inset-inline-start:50%;inset-block-start:50%;transform:translate(-50%,-50%);inline-size:100%;max-inline-size:min(600px, calc(100% - 2em));box-sizing: border-box;}
+.hero{inline-size:100%;background-color:#dce2f0;border-radius:.5em;padding:2em;box-sizing:border-box;}
+
+.adjustments {
+  --size: 32px;
+  --intro-text: #232a31;
+}
+input[type="color"]{inline-size:var(--size);block-size:var(--size);border-radius:var(--size);}
+input[type="color"]:focus{outline:0 none;}
+input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
+input[type="color"]::-webkit-color-swatch{border-radius:var(--size);}
+input[type="color"]:focus-visible{box-shadow:0 0 0 2px #95c2f8;}
+
+.adjustments{inline-size:100%;max-inline-size:600px;margin:1.5em auto 0;}
+.adjustments__label{inline-size:100%;display:block;}
+.adjustments .adjustments__label:nth-of-type(n+2){margin-block-start:1em;}
+.adjustments__div{display:flex;gap:.5em;align-items:center;}
+.subject,.adjustments__span{color:var(--intro-text);line-height:2;}
+
+.adjustments__div--fix-subject{inline-size:100%;}
+.adjustments__div--fix-subject .subject{inline-size:150px;flex-shrink:0;}
+.adjustments__div--fix-subject input[type=range]{flex-grow:1;}
+
+msc-circle-progress:not(:defined){display:none;}
+.hero__msc-circle-progress {
+  --msc-circle-progress-font-size: min(10vw, 48px);
+  --msc-circle-progress-font-color: #232a31;
+  --msc-circle-progress-color: #0f69ff;
+  --msc-circle-progress-placeholder-color: #ccd0dc;
+}
+.hero__msc-circle-progress{inline-size:50%;margin:0 auto;}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <msc-circle-progress class="hero__msc-circle-progress hero__msc-circle-progress--mutate">
+      <script type="application/json">
+        {
+          "size": 16,
+          "value": 33,
+          "max": 100
+        }
+      </script>
+    </msc-circle-progress>
+  </div>
+
+  <form class="adjustments">
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Text Color︰</p>
+        <input type="color" name="text-color" value="#232a31" />
+      </div>
+    </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Text Size︰</p>
+        <input type="range" name="text-size" value="48" min="0" max="96" />
+      </div>
+    </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Progress Color︰</p>
+        <input type="color" name="progress-color" value="#0f69ff" />
+      </div>
+    </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Placeholder Color︰</p>
+        <input type="color" name="placeholder-color" value="#ccd0dc" />
+      </div>
+    </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Progress Value︰</p>
+        <input type="range" name="progress-value" value="33" min="0" max="100" />
+      </div>
+    </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Progress Size︰</p>
+        <input type="range" name="progress-size" value="16" min="10" max="30" />
+      </div>
+    </label>
+  </form>
+</div>
+
+<script type="module">
+import { _wcl } from './mjs/common-lib.js';
+
+customElements.whenDefined('msc-circle-progress').then(() => {
+  const circleProgress = document.querySelector('msc-circle-progress');
+  const form = document.querySelector('.adjustments');
+  const events = ['input', 'change'];
+
+  const onMutate = () => {
+    const formData = new FormData(form);
+    _wcl.addStylesheetRules(
+      '.hero__msc-circle-progress--mutate',
+      {
+        '--msc-circle-progress-font-size': `${formData.get('text-size')}px`,
+        '--msc-circle-progress-font-color': formData.get('text-color'),
+        '--msc-circle-progress-color': formData.get('progress-color'),
+        '--msc-circle-progress-placeholder-color': formData.get('placeholder-color')
+      }
+    );
+  }
+
+  const handler = (evt) => {
+    const target = evt.target;
+    const name = target.name;
+    const formData = new FormData(form);
+
+    switch(name) {
+      case 'progress-value':
+        circleProgress.value = +formData.get(name);
+        break;
+      case 'progress-size':
+        circleProgress.size = +formData.get(name);
+        break;
+      default:
+        onMutate();
+    }
+  };
+
+  // events
+  events.map(
+    (event) => {
+      form.addEventListener(event, handler);
+    }
+  );
+});
+</script>
+
+</body>
+
+</html>

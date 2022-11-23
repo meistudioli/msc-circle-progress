@@ -1,0 +1,25 @@
+{
+  "name": "msc-circle-progress",
+  "version": "1.0.0",
+  "description": "<msc-circle-progress /> provides progress with circle shape. Developers could use it to indicate upload、form complete status for users.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meistudioli/msc-circle-progress.git"
+  },
+  "keywords": [
+    "web",
+    "front-end",
+    "web component",
+    "progress"
+  ],
+  "author": "Paul Li",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meistudioli/msc-circle-progress/issues"
+  },
+  "homepage": "https://github.com/meistudioli/msc-circle-progress#readme"
+}
