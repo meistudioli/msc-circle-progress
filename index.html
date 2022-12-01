@@ -48,7 +48,69 @@ input[type="color"]:focus-visible{box-shadow:0 0 0 2px #95c2f8;}
 
 .adjustments__div--fix-subject{inline-size:100%;}
 .adjustments__div--fix-subject .subject{inline-size:150px;flex-shrink:0;}
-.adjustments__div--fix-subject input[type=range]{flex-grow:1;}
+.adjustments__div--fix-subject input[type=range]{flex-grow:1;accent-color:#1b6efb;}
+.adjustments__div--fix-subject .radios{flex-grow:1;}
+.radios{display:flex;gap:2em;align-items:center;}
+.radio-unit{display:flex;gap:.5em;align-items:center;}
+.radio-unit__label{font-size:1em;color:var(--intro-text);}
+
+/* FUJI radio */
+.radioWrap{
+  --inkwell: #1d2228;
+  --shark: #828a93;
+  --marshmallow: #f5f8fa;
+  --bob: #b0b9c1;
+
+  --width: 20px;
+  --dot-width: 8px;
+
+  --theme: #1b6efb;
+  --normal: var(--shark);
+  --overlay: var(--inkwell);
+  --bgc-disabled: var(--marshmallow);
+  --theme-disabled: var(--bob);
+
+  --current-color: var(--normal);
+
+  position: relative;
+  overflow: hidden;
+  width: var(--width);
+  height: var(--width);
+}
+
+.radioInput{position:absolute;top:-100%;display:block;}
+.radioLabel{position:relative;width:100%;height:100%;display:block;box-sizing:border-box;border-radius:var(--width);box-shadow:inset 0 0 0 2px var(--current-color);background-color:#fff;transition:background-color 100ms ease,border-color 100ms ease;}
+.radioDot{position:absolute;left:50%;top:50%;content:'';width:var(--dot-width);height:var(--dot-width);background-color:var(--current-color);margin-left:calc(var(--dot-width)/2*-1);margin-top:calc(var(--dot-width)/2*-1);transform:scale(.001);border-radius:var(--dot-width);text-indent:100%;white-space:nowrap;overflow:hidden;transition:background-color 100ms ease,transform 100ms ease;}
+
+.radioLabel::before{position:absolute;left:0;top:0;content:'';width:100%;height:100%;border-radius:var(--width);box-shadow:inset 0 0 0 2px var(--overlay);pointer-events:none;filter:opacity(0);transition:filter 100ms ease;}
+.radioLabel::after{position:absolute;left:50%;top:50%;content:'';width:var(--dot-width);height:var(--dot-width);background-color:var(--overlay);transform:translate(-50%,-50%);filter:opacity(0);border-radius:var(--dot-width);transition:filter 100ms ease;pointer-events:none;display:none;}
+.radioInput:checked~.radioLabel::after{display:block;}
+
+.radioInput:checked,.radioInput:checked~.radioLabel{--current-color:var(--theme);}
+.radioInput:checked~.radioLabel .radioDot{transform:scale(1);}
+
+.radioInput:disabled,.radioInput:disabled~.radioLabel{--current-color:var(--theme-disabled);}
+.radioInput:disabled~.radioLabel{background-color:var(--bgc-disabled);}
+
+/* radio doesn't have readonly state
+.radioInput:read-only,.radioInput:read-only~.radioLabel{--current-color:var(--theme-disabled);}
+.radioInput:read-only~.radioLabel{background-color:var(--bgc-disabled);}
+*/
+
+.radioInput:focus{outline:0 none;}
+.radioWrap:focus-within{--current-color:var(--theme);}
+
+.radioInput:not(:disabled):focus~.radioLabel{--current-color:var(--theme);}
+.radioInput:not(:disabled):focus~.radioLabel::before{filter:opacity(.2);}
+.radioInput:not(:disabled):focus~.radioLabel::after{filter:opacity(.2);}
+
+@media (hover: hover) {
+  .radioInput:not(:disabled)~.radioLabel:hover{--current-color:var(--theme);}
+  .radioInput:not(:disabled)~.radioLabel:hover::before{filter:opacity(.2);}
+  .radioInput:not(:disabled)~.radioLabel:hover::after{filter:opacity(.2);}
+}
+
+.fuji-radios{display:flex;justify-content:center;padding:1em;gap:1em;}
 
 msc-circle-progress:not(:defined){display:none;}
 .hero__msc-circle-progress {
@@ -70,7 +132,8 @@ msc-circle-progress:not(:defined){display:none;}
         {
           "size": 16,
           "value": 33,
-          "max": 100
+          "max": 100,
+          "round": true
         }
       </script>
     </msc-circle-progress>
@@ -113,6 +176,32 @@ msc-circle-progress:not(:defined){display:none;}
         <input type="range" name="progress-size" value="16" min="10" max="30" />
       </div>
     </label>
+    <label class="adjustments__label">
+      <div class="adjustments__div adjustments__div--fix-subject">
+        <p class="subject">Round︰</p>
+        <div class="radios">
+          <div class="radio-unit">
+            <div class="radioWrap">
+              <input id="progress-round-yes" type="radio" name="progress-round" value="yes" class="radioInput" checked />
+              <label for="progress-round-yes" class="radioLabel">
+                <em class="radioDot">YES</em>
+              </label>
+            </div>
+            <label for="progress-round-yes" class="radio-unit__label">YES</label>
+          </div>
+
+          <div class="radio-unit">
+            <div class="radioWrap">
+              <input id="progress-round-no" type="radio" name="progress-round" value="no" class="radioInput" />
+              <label for="progress-round-no" class="radioLabel">
+                <em class="radioDot">NO</em>
+              </label>
+            </div>
+            <label for="progress-round-no" class="radio-unit__label">NO</label>
+          </div>
+        </div>
+      </div>
+    </label>
   </form>
 </div>
 
@@ -148,6 +237,9 @@ customElements.whenDefined('msc-circle-progress').then(() => {
         break;
       case 'progress-size':
         circleProgress.size = +formData.get(name);
+        break;
+      case 'progress-round':
+        circleProgress.round = formData.get(name) === 'yes';
         break;
       default:
         onMutate();

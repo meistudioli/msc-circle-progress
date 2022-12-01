@@ -12,10 +12,11 @@ import { _wccss } from './common-css.js';
 const defaults = {
   size: 20, // pixel
   value: 0,
-  max: 100
+  max: 100,
+  round: true
 };
 
-const booleanAttrs = [];
+const booleanAttrs = ['round'];
 const objectAttrs = [];
 
 const template = document.createElement('template');
@@ -38,12 +39,20 @@ ${_wccss}
   --background: conic-gradient(var(--progress-color) var(--percentage-occupy), 0, var(--progress-placeholder-color) var(--percentage-less));
 
   --mask: path('M0 0Z');
+  --size: ${defaults.size}px;
+  --origin-y: 0px;
+  --angle: calc(((var(--value) * 360) / 100) * 1deg);
 }
 
 .main{position:relative;inline-size:100%;aspect-ratio:1/1;}
-.main__circle{position:absolute;inset-inline-start:0;inset-block-start:0;inline-size:100%;block-size:100%;display:block;background:var(--background);clip-path:var(--mask);}
+.main__circle{position:absolute;inset-inline-start:0;inset-block-start:0;inline-size:100%;block-size:100%;display:block;background:var(--background);clip-path:var(--mask);pointer-events:none;}
 .main__value{position:relative;font-size:var(--font-size);color:var(--font-color);z-index:1;}
 
+.main__circle::before,.main__circle::after{position:absolute;inset-block-start:0;inset-inline:0;margin:auto;content:'';inline-size:var(--size);block-size:var(--size);border-radius:var(--size);background-color:var(--progress-color);display:none;}
+.main__circle::before{transform-origin:50% var(--origin-y);transform:rotate(var(--angle));clip-path:polygon(50% 0,50% 100%,100% 100%,100% 0);}
+.main__circle::after{clip-path:polygon(0 0,0 100%,50% 100%,50% 0);}
+
+.main--rounded .main__circle::before,.main--rounded .main__circle::after{display:revert;}
 .main--basis{}
 .main--mutation{}
 </style>
@@ -160,9 +169,17 @@ export class MscCircleProgress extends HTMLElement {
     const hasValue = newValue !== null;
 
     if (!hasValue) {
-      this.#config[attrName] = defaults[attrName];
+      if (booleanAttrs.includes(attrName)) {
+        this.#config[attrName] = false;
+      } else {
+        this.#config[attrName] = defaults[attrName];
+      }
     } else {
       switch (attrName) {
+        case 'round':
+          this.#config[attrName] = true;
+          break;
+
         case 'size': {
           const num = +newValue;
           this.#config[attrName] = (isNaN(num) || num <= 0) ? defaults.size : num;
@@ -199,6 +216,10 @@ export class MscCircleProgress extends HTMLElement {
     this._format(attrName, oldValue, newValue);
 
     switch (attrName) {
+      case 'round':
+        this.#nodes.main.classList.toggle('main--rounded', this.round);
+        break;
+
       case 'size':
         this._onRefresh();
         break;
@@ -245,6 +266,14 @@ export class MscCircleProgress extends HTMLElement {
 
   get value() {
     return this.#config.value;
+  }
+
+  set round(value) {
+    this.toggleAttribute('round', Boolean(value));
+  }
+
+  get round() {
+    return this.#config.round;
   }
 
   set size(value) {
@@ -311,7 +340,9 @@ export class MscCircleProgress extends HTMLElement {
     _wcl.addStylesheetRules(
       '.main--mutation',
       {
-        '--mask': `path('M${pointes[0].x} ${pointes[0].y} A${r1} ${r1} 0 0 0 ${pointes[1].x} ${pointes[1].y} A${r1} ${r1} 0 0 0 ${pointes[0].x} ${pointes[0].y} L${pointes[2].x} ${pointes[2].y} A${r2} ${r2} 0 0 1 ${pointes[3].x} ${pointes[3].y} A${r2} ${r2} 0 0 1 ${pointes[2].x} ${pointes[2].y}Z')`
+        '--mask': `path('M${pointes[0].x} ${pointes[0].y} A${r1} ${r1} 0 0 0 ${pointes[1].x} ${pointes[1].y} A${r1} ${r1} 0 0 0 ${pointes[0].x} ${pointes[0].y} L${pointes[2].x} ${pointes[2].y} A${r2} ${r2} 0 0 1 ${pointes[3].x} ${pointes[3].y} A${r2} ${r2} 0 0 1 ${pointes[2].x} ${pointes[2].y}Z')`,
+        '--size': `${this.size}px`,
+        '--origin-y': `${r1}px`
       },
       this.#nodes.styleSheet
     );

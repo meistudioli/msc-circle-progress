@@ -1,6 +1,6 @@
 {
   "name": "msc-circle-progress",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "<msc-circle-progress /> provides progress with circle shape. Developers could use it to indicate upload、form complete status for users.",
   "main": "index.html",
   "scripts": {

@@ -29,7 +29,8 @@ Put &lt;msc-circle-progress /> into HTML document. It will have different functi
     {
       "size": 16,
       "value": 33,
-      "max": 100
+      "max": 100,
+      "round": true
     }
   </script>
 </msc-circle-progress>
@@ -142,6 +143,18 @@ Set max for &lt;msc-circle-progress />. Default is `100` (not set).
 </msc-circle-progress>
 ```
 
+- **round**
+
+It will switch &lt;msc-circle-progress /> bar as round once set. Default is `true` (not set).
+
+```html
+<msc-circle-progress
+  round
+>
+  ...
+</msc-circle-progress>
+```
+
 ## Properties
 
 | Property Name | Type | Description |
@@ -149,6 +162,7 @@ Set max for &lt;msc-circle-progress />. Default is `100` (not set).
 | size | Number | Getter / Setter for size. Default is `20`. |
 | value | Number | Getter / Setter for value. Default is `0`. |
 | max | Number | Getter / Setter for max. Default is `100`. |
+| round | Boolean | Getter / Setter for round. Default is `true`. |
 
 ## Method
 
