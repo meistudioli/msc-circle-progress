@@ -13,7 +13,7 @@ const defaults = {
   size: 20, // pixel
   value: 0,
   max: 100,
-  round: true
+  round: false
 };
 
 const booleanAttrs = ['round'];
@@ -148,14 +148,14 @@ export class MscCircleProgress extends HTMLElement {
     }
 
     // upgradeProperty
-    Object.keys(defaults).forEach((key) => this._upgradeProperty(key));
+    Object.keys(defaults).forEach((key) => this.#upgradeProperty(key));
 
     // evts
     this.#data.controller = new AbortController();
     const signal = this.#data.controller.signal;
     window.addEventListener('resize', this._onRefresh, { signal });
 
-    this._onValue();
+    this.#onValue();
     this._onRefresh();
   }
 
@@ -165,7 +165,7 @@ export class MscCircleProgress extends HTMLElement {
     }
   }
 
-  _format(attrName, oldValue, newValue) {
+  #format(attrName, oldValue, newValue) {
     const hasValue = newValue !== null;
 
     if (!hasValue) {
@@ -213,7 +213,7 @@ export class MscCircleProgress extends HTMLElement {
       return;
     }
 
-    this._format(attrName, oldValue, newValue);
+    this.#format(attrName, oldValue, newValue);
 
     switch (attrName) {
       case 'round':
@@ -226,7 +226,7 @@ export class MscCircleProgress extends HTMLElement {
 
       case 'max':
       case 'value':
-        this._onValue();
+        this.#onValue();
         break;
     }
   }
@@ -235,7 +235,7 @@ export class MscCircleProgress extends HTMLElement {
     return Object.keys(defaults); // MscCircleProgress.observedAttributes
   }
 
-  _upgradeProperty(prop) {
+  #upgradeProperty(prop) {
     let value;
 
     if (MscCircleProgress.observedAttributes.includes(prop)) {
@@ -300,7 +300,7 @@ export class MscCircleProgress extends HTMLElement {
     return this.#config.max;
   }
 
-  _onValue() {
+  #onValue() {
     const value = (this.value / this.max) * 100;
 
     this.#nodes.span.textContent = parseFloat(value.toFixed(1));

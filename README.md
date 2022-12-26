@@ -145,7 +145,7 @@ Set max for &lt;msc-circle-progress />. Default is `100` (not set).
 
 - **round**
 
-It will switch &lt;msc-circle-progress /> bar as round once set. Default is `true` (not set).
+It will switch &lt;msc-circle-progress /> bar as round once set. Default is `false` (not set).
 
 ```html
 <msc-circle-progress
@@ -162,7 +162,7 @@ It will switch &lt;msc-circle-progress /> bar as round once set. Default is `tru
 | size | Number | Getter / Setter for size. Default is `20`. |
 | value | Number | Getter / Setter for value. Default is `0`. |
 | max | Number | Getter / Setter for max. Default is `100`. |
-| round | Boolean | Getter / Setter for round. Default is `true`. |
+| round | Boolean | Getter / Setter for round. Default is `false`. |
 
 ## Method
 
